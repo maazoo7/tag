@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+date_change_wizard_id,date_change_wizard,model_date_change_wizard,base.group_user,1,1,1,1
+project_date_change_request_id,project_date_change_request,model_project_date_change_request,base.group_user,1,1,1,1

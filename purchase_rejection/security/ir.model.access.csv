@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+id_purchase_order_rejection_reason,id_purchase_order_rejection_reason,model_purchase_order_rejection_reason,base.group_user,1,1,1,1
+id_purchase_order_reject_wizard,id_purchase_order_reject_wizard,model_purchase_order_reject_wizard,base.group_user,1,1,1,1

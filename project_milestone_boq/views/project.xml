@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    smart btn for project milestone -->
+    <record id="view_project_project_form_milestone_button" model="ir.ui.view">
+        <field name="name">project.project.form.milestone.button</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <!-- Add the smart button in the button box -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_get_list_view"
+                        icon="fa-flag-checkered"
+                        context="{
+                            'res_model': 'project.milestone',
+                            'domain': [('project_id', '=', id)],
+                            'default_project_id': id
+                        }">
+                    <field string="Milestones" name="milestone_count" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_products"
+                        icon="fa-flag-chec  kered"
+                        context="{
+                        'res_model': 'task.product.link',
+                        'domain': [('task_id.project_id', '=', id)],
+                        'default_project_id': id
+                    }">
+                    <field string="BOQ" name="product_count" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_pr"
+                        icon="fa-file-text-o">
+                    <field name="linked_pr_count" widget="statinfo" string="Purchase Requests"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_po"
+                        icon="fa-shopping-cart">
+                    <field name="linked_po_count" widget="statinfo" string="Purchase Order"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_moves"
+                        icon="fa-exchange">
+                    <field name="moves_count" widget="statinfo" string="Moves"/>
+                </button>
+
+            </xpath>
+            <xpath expr="//page[@name='description']" position="after">
+                <page name="schedular" string="Invoicing">
+                    <field name="invoicing_schedular_ids">
+                        <list create='0' delete='0' editable="bottom">
+                            <field name="name"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="progress" widget="progressbar"/>
+                            <field name="progress_completion"/>
+                            <field name="percentage"/>
+                            <field name="invoice_status"/>
+                            <field name="invoice_generated" invisible="1"/>
+                            <field name="total_amount"/>
+                            <field name="sale_order_id"/>
+                            <button name="create_invoice"
+                                    string="Create Invoice"
+                                    type="object"
+                                    icon="fa-file-invoice-dollar"
+                                    attrs="{'invisible': [('invoice_generated', '=', True)]}"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    project task smart btn-->
+    <record id="view_project_project_task_form_boq_button" model="ir.ui.view">
+        <field name="name">project.task.form.boq.button</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_products"
+                        icon="fa-flag-checkered"
+                        context="{
+                            'res_model': 'task.product.link',
+                            'domain': [('task_id', '=', id)],
+                            'default_task_id': id
+                        }">
+                    <field string="BOQ" name="product_count" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_pr"
+                        icon="fa-file-text-o">
+                    <field name="linked_pr_count" widget="statinfo" string="Purchase Requests"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_po"
+                        icon="fa-shopping-cart">
+                    <field name="linked_po_count" widget="statinfo" string="Purchase Order"/>
+                </button>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_consume_linked_products"
+                        string="Consume Linked Products"
+                        type="object"
+                        class="btn-primary"
+                        icon="fa-cogs"/>
+            </xpath>
+            <xpath expr="//field[@name='project_id']" position="after">
+                <field name="qty_consumed"/>
+            </xpath>
+        </field>
+    </record>
+    <!--    linked products -->
+    <record id="view_task_product_link_tree" model="ir.ui.view">
+        <field name="name">task.product.link.tree</field>
+        <field name="model">task.product.link</field>
+        <field name="arch" type="xml">
+            <list string="Linked Products" editable="bottom">
+                <field name="product_id"/>
+                <field name="description"/>
+                <field name="milestone_id"/>
+                <field name="task_id"/>
+                <field name="boq_category_id"/>
+                <field name="quantity"/>
+                <field name="price_unit"/>
+                <field name="estimated_cost"/>
+                <field name="sales_subtotal"/>
+                <field name="cost_subtotal"/>
+                <field name="supplied_by"/>
+                <field name="sale_order_id"/>
+                <field name="main_warehouse_id"/>
+                <field name="project_warehouse_id"/>
+                <field name="available_inventory"/>
+                <field name="consumed_qty" readonly="is_task_folded"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_task_product_link_form" model="ir.ui.view">
+        <field name="name">task.product.link.form</field>
+        <field name="model">task.product.link</field>
+        <field name="arch" type="xml">
+            <form string="Linked Product">
+                <group>
+                    <field name="task_id"/>
+                    <field name="sale_line_id"/>
+                    <field name="product_id"/>
+                    <field name="quantity"/>
+                    <field name="price_unit"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_linked_product_action" model="ir.actions.act_window">
+        <field name="name">task.product.link</field>
+        <field name="res_model">task.product.link</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="view_project_milestone_kanban_inherit_custom" model="ir.ui.view">
+        <field name="name">project.milestone.kanban.inherit.custom</field>
+        <field name="model">project.milestone</field>
+        <field name="inherit_id" ref="project.project_milestone_view_kanban"/>
+        <field name="arch" type="xml">
+
+            <!-- 1️⃣ Add extra fields so they can be used in record -->
+            <xpath expr="//kanban" position="inside">
+                <field name="project_id"/>
+                <field name="progress"/>
+                <field name="invoice_generated"/>
+                <field name="total_amount"/>
+                <field name="task_ids"/>
+            </xpath>
+
+            <!-- 2️⃣ Extend the card template -->
+            <xpath expr="//t[@t-name='card']/div" position="after">
+                <div class="mt-2 ms-4">
+
+                    <!-- 🔹 Project Info -->
+                    <div class="text-muted">
+                        <i class="fa fa-folder-open me-1" title="Project ID"/>
+                        <field name="project_id"/>
+                    </div>
+
+                    <!-- 🔹 Progress Bar -->
+                    <div class="mt-2">
+                        <t t-set="progress_value" t-value="0"/>
+                        <t t-if="record.progress and record.progress.raw_value">
+                            <t t-set="progress_value" t-value="record.progress.raw_value"/>
+                        </t>
+                        <div class="progress" style="height: 6px;">
+                            <t t-set="bar_class" t-value="'progress-bar bg-info'"/>
+                            <t t-if="progress_value == 100">
+                                <t t-set="bar_class" t-value="'progress-bar bg-success'"/>
+                            </t>
+                            <div class="progress-bar" t-att-class="bar_class"
+                                 t-att-style="'width:' + progress_value + '%;'">
+                            </div>
+                        </div>
+                        <small class="text-muted"><t t-esc="progress_value"/>%
+                        </small>
+                    </div>
+
+                    <!-- 🔹 Invoice Badge -->
+                    <div class="mt-2">
+                        <t t-if="record.invoice_generated and record.invoice_generated.raw_value">
+                            <span class="badge bg-success">Invoiced</span>
+                        </t>
+                        <t t-else="">
+                            <span class="badge bg-warning">Pending</span>
+                        </t>
+                    </div>
+
+                    <!-- 🔹 Financial Info -->
+                    <div class="mt-1">
+                        <i class="fa fa-money me-1 text-primary" title="Total Amount"/>
+                        <strong>
+                            <field name="total_amount"/>
+                        </strong>
+                    </div>
+
+                    <!-- 🔹 Task Count -->
+                    <div class="mt-1 text-muted small">
+                        <i class="fa fa-tasks me-1 text-secondary" title="Tasks"/>
+                        <t t-set="task_count" t-value="0"/>
+                        <t t-if="record.task_ids and record.task_ids.raw_value">
+                            <t t-set="task_count" t-value="record.task_ids.raw_value.length"/>
+                        </t>
+                        <t t-esc="task_count"/>
+                        Tasks
+                    </div>
+
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+<!--    <record id="view_project_milestone_gantt_custom" model="ir.ui.view">-->
+<!--        <field name="name">project.milestone.gantt.custom</field>-->
+<!--        <field name="model">project.milestone</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <gantt string="Milestone Timeline"-->
+<!--                   date_start="plan_start_date"-->
+<!--                   date_stop="plan_end_date"-->
+<!--                   progress="progress"-->
+<!--                   default_group_by="project_id"-->
+<!--                   color="project_id">-->
+<!--                <field name="name"/>-->
+<!--                <field name="project_id"/>-->
+<!--                <field name="plan_start_date"/>-->
+<!--                <field name="plan_end_date"/>-->
+<!--                <field name="progress"/>-->
+<!--            </gantt>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <!--    <record id="project.project_milestone_action" model="ir.actions.act_window">-->
+    <!--        <field name="view_mode">list,kanban,gantt,form</field>-->
+    <!--    </record>-->
+
+    <record id="action_project_milestone" model="ir.actions.act_window">
+        <field name="name">Project Milestones</field>
+        <field name="res_model">project.milestone</field>
+        <field name="view_mode">list,kanban,form</field>
+<!--        <field name="view_id" ref="view_project_milestone_gantt_custom"/>-->
+
+    </record>
+
+
+    <record id="view_project_milestone_form" model="ir.ui.view">
+        <field name="name">project.milestone.form</field>
+        <field name="model">project.milestone</field>
+        <field name="inherit_id" ref="project.project_milestone_view_form"/>
+        <field name="arch" type="xml">
+            <form position="replace">
+                <form>
+                    <header>
+                        <button name="create_invoice"
+                                string="Create Invoice"
+                                type="object"
+                                class="btn-primary"
+                                invisible="progress_completion != 100 or not sale_order_id or invoice_generated"/>
+                        <field name="invoice_status" widget="badge"
+                               decoration-success="invoice_generated == True"
+                               decoration-info="progress >= 100 and invoice_generated == False"
+                               decoration-warning="progress &lt; 100"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button"
+                                    type="object"
+                                    name="action_view_tasks"
+                                    icon="fa-tasks"
+                                    invisible="not task_ids">
+                                <field name="task_ids" widget="statinfo" string="Tasks"/>
+                            </button>
+                        </div>
+
+                        <div class="oe_title">
+                            <label for="name" string="Milestone Name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Phase 1 - Development"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Project Information">
+                                <field name="project_id" required="1"/>
+                                <field name="sale_order_id"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="invoice_status"/>
+                            </group>
+                            <group string="Progress &amp; Dates">
+                                <field name="progress" widget="progressbar"/>
+                                <field name="progress_completion" readonly="1"/>
+                                <field name="start_date" readonly="1"/>
+                                <field name="end_date" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Financial Information">
+                                <field name="total_amount" widget="monetary"/>
+                                <field name="percentage" invisible="1"/>
+                            </group>
+                            <group string="Invoice Status">
+                                <field name="invoice_generated" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Tasks" name="tasks">
+                                <field name="task_ids" readonly="1">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="stage_id"/>
+                                        <field name="user_ids" widget="many2many_avatar_user"/>
+<!--                                        <field name="planned_date_begin"/>-->
+                                        <field name="date_deadline"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Details" name="details">
+                                <group>
+                                    <field name="id" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_project_milestone_list_view" model="ir.ui.view">
+        <field name="name">project.milestone.list.view</field>
+        <field name="model">project.milestone</field>
+        <field name="inherit_id" ref="sale_project.project_milestone_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="progress_completion"/>
+                <field name="percentage"/>
+                <field name="invoice_status"/>
+                <!--                <field name="invoice_generated"/>-->
+                <field name="total_amount"/>
+                <field name="sale_order_id"/>
+                <button name="create_invoice"
+                        string="Create Invoice"
+                        type="object"
+                        icon="fa-file-invoice-dollar"
+                        invisible="invoice_status not in ['Ready to Invoice']"/>
+            </xpath>
+            <xpath expr="//field[@name='sale_line_id']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='quantity_percentage']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='deadline']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='is_reached']" position="replace">
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Create PR -->
+    <record id="action_create_pr_from_task_product_link" model="ir.actions.server">
+        <field name="name">Create PR</field>
+        <field name="model_id" ref="model_task_product_link"/>
+        <field name="binding_model_id" ref="model_task_product_link"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_create_pr()
+        </field>
+    </record>
+
+    <record id="view_task_product_link_tree_inherit" model="ir.ui.view">
+        <field name="name">task.product.link.tree.inherit</field>
+        <field name="model">task.product.link</field>
+        <field name="inherit_id" ref="project_milestone_boq.view_task_product_link_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_open_transfer_wizard"
+                            type="object"
+                            string="Create Inventory Transfer"
+                            class="oe_highlight"/>
+
+                    <button name="action_create_pr"
+                            type="object"
+                            string="Create PR"
+                            class="oe_highlight"/>
+
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Create PO -->
+    <!--    <record id="action_create_po_from_task_product_link" model="ir.actions.server">-->
+    <!--        <field name="name">Create PO</field>-->
+    <!--        <field name="model_id" ref="model_task_product_link"/>-->
+    <!--        <field name="binding_model_id" ref="model_task_product_link"/>-->
+    <!--        <field name="state">code</field>-->
+    <!--        <field name="code">-->
+    <!--            action = records.action_create_po()-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+
+</odoo>

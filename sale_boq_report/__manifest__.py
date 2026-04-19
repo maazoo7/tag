@@ -1,0 +1,15 @@
+{
+    'name': 'Sale BOQ Report',
+    'version': '19.0.3.0.0',
+    'summary': 'Bill of Quantities – Summary of Costs Report for Sale Orders',
+    'category': 'Sales',
+    'author': 'Custom',
+    'depends': ['sale_management'],
+    'data': [
+        'report/sale_boq_report_template.xml',
+        'report/sale_boq_report_action.xml',
+    ],
+    'installable': True,
+    'application': False,
+    'license': 'LGPL-3',
+}

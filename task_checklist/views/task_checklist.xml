@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="action_task_checklist" model="ir.actions.act_window">
+            <field name="name">Task Checklist</field>
+            <field name="res_model">task.checklist</field>
+            <field name="view_mode">list,form</field>
+            <field name="help">Create and manage standard checklists.</field>
+        </record>
+
+        <menuitem id="menu_task_checklist_sub"
+                  name="Task Checklist"
+                  parent="project.menu_project_config"
+                  action="action_task_checklist"
+                  sequence="10"/>
+
+        <record id="view_task_checklist_tree" model="ir.ui.view">
+            <field name="name">task.checklist.tree</field>
+            <field name="model">task.checklist</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="detail_description"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_task_checklist_form" model="ir.ui.view">
+            <field name="name">task.checklist.form</field>
+            <field name="model">task.checklist</field>
+            <field name="arch" type="xml">
+                <form string="Checklist">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="detail_description"/>
+                            <field name="is_material_req" widget="boolean_toggle"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+         <record id="view_project_project_task_form_boq_button_test" model="ir.ui.view">
+        <field name="name">project.task.form.boq.test</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='qty_consumed']" position="after">
+                <field name="checklist_completed"/>
+            </xpath>
+        </field>
+    </record>
+
+    </data>
+</odoo>

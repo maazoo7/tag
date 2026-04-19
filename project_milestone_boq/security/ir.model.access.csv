@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+id_boq_category,id_boq_category,model_boq_category,base.group_user,1,1,1,1
+id_task_product_link,id_task_product_link,model_task_product_link,base.group_user,1,1,1,1
+id_create_inventory_transfer_wizard,id.create.inventory.transfer.wizard,model_create_inventory_transfer_wizard,base.group_user,1,1,1,1
+id_create_inventory_transfer_line_wizard,id.create.inventory.transfer.line.wizard,model_create_inventory_transfer_line_wizard,base.group_user,1,1,1,1
+id_create_po_wizard,id_create_po_wizard,model_create_po_wizard,base.group_user,1,1,1,1
+id_create_po_wizard_line,id_create_po_wizard_line,model_create_po_wizard_line,base.group_user,1,1,1,1

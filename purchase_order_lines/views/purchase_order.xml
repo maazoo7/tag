@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="action_purchase_order_inherit_list_view" model="ir.actions.act_window">
+            <field name="name">Purchase Lines</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="view_mode">list</field>
+        </record>
+
+        <record id="view_purchase_line_list_view" model="ir.ui.view">
+            <field name="name">purchase.line.list.view</field>
+            <field name="model">purchase.order.line</field>
+            <field name="inherit_id" ref="purchase.purchase_history_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="decoration-danger">status_color == 'red'</attribute>
+                    <attribute name="decoration-success">status_color == 'green'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_uom_qty']" position="after">
+                    <field name="estimated_qty"/>
+                    <field name="qty_received"/>
+                </xpath>
+                <xpath expr="//field[@name='date_approve']" position="before">
+                    <field name="state"/>
+                    <field name="date_order"/>
+                </xpath>
+                <xpath expr="//field[@name='date_approve']" position="after">
+                    <field name="date_planned"/>
+                    <field name="actual_receive_date"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <menuitem
+                id="menu_purchase_order_lines_ext"
+                sequence="20"
+                parent="purchase_request.parent_menu_purchase_request"
+                action="action_purchase_order_inherit_list_view"
+        />
+    </data>
+</odoo>

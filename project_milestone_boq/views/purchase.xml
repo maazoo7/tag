@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_request_form_view_inherit" model="ir.ui.view">
+        <field name="name">purchase.request.form.inherit</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_linked_project"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-folder-open"
+                        context="{
+                            'res_model': 'project.project',
+                        }">
+                    <field name="project_count" widget="statinfo" string="Project"/>
+                </button>
+                <button name="action_view_linked_task"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-tasks"
+                        context="{
+                            'res_model': 'project.task',
+                        }">
+                    <field name="task_count" widget="statinfo" string="Tasks"/>
+                </button>
+                <button name="action_view_linked_so"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart"
+                        context="{
+                            'res_model': 'sale.order',
+                        }">
+                    <field name="so_count" widget="statinfo" string="Sale Orders"/>
+                </button>
+
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="purchase_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_linked_project"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-folder-open"
+                        context="{
+                            'res_model': 'project.project',
+                        }">
+                    <field name="project_count" widget="statinfo" string="Project"/>
+                </button>
+                <button name="action_view_linked_task"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-tasks"
+                        context="{
+                            'res_model': 'project.task',
+                        }">
+                    <field name="task_count" widget="statinfo" string="Tasks"/>
+                </button>
+                <button name="action_view_linked_so"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart"
+                        context="{
+                            'res_model': 'sale.order',
+                        }">
+                    <field name="so_count" widget="statinfo" string="Sale Orders"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='requisition_id']" position="after">
+                <field name="delivery_method"/>
+                <field name="fleet_id"/>
+                <field name="date_pickup"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_create_po_wizard_form" model="ir.ui.view">
+        <field name="name">create.po.wizard.form</field>
+        <field name="model">create.po.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Purchase Order">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id" placeholder="Select Supplier/Subcontractor"/>
+                        </group>
+                        <group>
+                            <field name="destination_location_id" placeholder="Project Stock Location"/>
+                            <field name="task_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Order Lines">
+                            <field name="line_ids" options="{'no_create': True}" create="false">
+                                <list create="0" editable="top">
+                                    <field name="product_id"/>
+                                    <field name="description"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="price_unit"/>
+                                    <field name="subtotal"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <footer>
+                    <button string="Create PO" type="object" name="action_create_po" class="btn-primary"
+                            context="{'default_task_id': task_id}"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_purchase_request_line_make_purchase_order_inherit" model="ir.ui.view">
+        <field name="name">purchase.request.line.make.purchase.order.inherit</field>
+        <field name="model">purchase.request.line.make.purchase.order</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_line_make_purchase_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='item_ids']/list/field[@name='keep_description']" position="before">
+                <field name="estimated_cost"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_form_ext" model="ir.ui.view">
+        <field name="name">purchase.order.form.ext</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@id='bid_confirm'][1]" position="replace">
+
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button
+                        name="action_approve_pending_rfq"
+                        type="object"
+                        string="Confirm Order"
+                        class="btn-primary"
+                        invisible="state in ('approved','draft', 'sent','purchase','rejected')"
+                />
+<!--                <button name="button_confirm" type="object" invisible="state in ('approved','draft', 'sent','purchase','rejected')" string="Confirm Order" context="{'validate_analytic': True}" class="oe_highlight" id="bid_confirm" data-hotkey="q"/>-->
+
+                <button
+                        name="action_pending_approval"
+                        type="object"
+                        string="Send for Approval"
+                        class="btn-primary"
+                        invisible="state in ('approved', 'sent','purchase', 'pending_approval')"
+                />
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')][1]" position="replace">
+                <div class="oe_title">
+                    <span class="o_form_label" invisible="state not in ('draft', 'sent')">Request for Quotation</span>
+                    <span class="o_form_label" invisible="state in ('draft', 'sent', 'pending_approval')">Purchase
+                        Order
+                    </span>
+                    <span class="o_form_label" invisible="state in ('approved','draft', 'sent','purchase')">Pending
+                        approval RFQ
+                    </span>
+
+                    <h1 class="d-flex">
+                        <field name="priority" widget="priority" class="me-3"/>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="statusbar"
+                       statusbar_visible="draft,pending_approval,send,done,cancel"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_qty']" position="after">
+                <field name="estimated_cost"/>
+                <field name="estimated_qty"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_form_view_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.form.ext</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="delivery_method"/>
+                <field name="fleet_id"/>
+                <field name="date_pickup"/>
+            </xpath>
+            <xpath expr="//field[33]" position="replace">
+                <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable" column_invisible="parent.state=='draft'" decoration-danger="product_uom_qty and quantity &gt; product_uom_qty and parent.state not in ['done', 'cancel']" decoration-warning="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

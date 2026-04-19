@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+
+        <record id="stock_move_tree_ext" model="ir.ui.view">
+            <field name="name">stock.move.tree.view</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='reference']" position="after">
+                    <field name="analytic_account_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_move_tree_ext_!01" model="ir.ui.view">
+            <field name="name">stock.move.tree.views</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[30]" position="after">
+                    <field name="analytic_account_id"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="fleet_vehicle_form_view" model="ir.ui.view">
+            <field name="name">fleet.vehicle.form.views</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet[1]/group[1]/group[1]/field[6]" position="after">
+                    <field name="analytic_account_id"/>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

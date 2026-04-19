@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    added extra fields for sale order-->
+    <record id="sale_order_inherit_line_ext" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_project"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-folder-open"
+                        context="{
+                            'res_model': 'project.project',
+                        }">
+                    <field name="project_count" widget="statinfo" string="Project"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_milestones"
+                        icon="fa-flag-checkered"
+                        context="{
+                        'res_model': 'project.milestone'
+                    }">
+                    <field string="Milestones" name="milestone_count" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_pr"
+                        icon="fa-file-text-o">
+                    <field name="linked_pr_count" widget="statinfo" string="Purchase Requests"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_po"
+                        icon="fa-shopping-cart">
+                    <field name="linked_po_count" widget="statinfo" string="Purchase Order"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_linked_moves"
+                        icon="fa-exchange">
+                    <field name="moves_count" widget="statinfo" string="Moves"/>
+                </button>
+
+            </xpath>
+            <xpath expr="//field[@name='order_line']//list//field[@name='product_template_id']" position="after">
+                <field name="x_supplied_by" optional="show"/>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']//list//field[@name='price_unit']" position="before">
+                <field name="x_estimated_cost"
+                       optional="show"
+                       widget="monetary"
+                />
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="sale_order_template_view_form_inherit_subsection" model="ir.ui.view">
+        <field name="name">sale.order.template.form.inherit.subsection</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Update the field widget to enable subsections -->
+            <xpath expr="//field[@name='sale_order_template_line_ids']" position="attributes">
+                <attribute name="widget">so_template_line_o2m</attribute>
+                <attribute name="options">{'subsections': True}</attribute>
+            </xpath>
+
+            <!-- Add subsection control button in the list view -->
+            <xpath expr="//field[@name='sale_order_template_line_ids']//list/control/create[@name='add_note_control']"
+                   position="after">
+                <create name="add_subsection_control" string="Add a subsection"
+                        context="{'default_display_type': 'line_subsection'}"/>
+            </xpath>
+
+            <!-- Add subsection page in the form view notebook -->
+            <xpath expr="//field[@name='sale_order_template_line_ids']//form//notebook[@name='description']/page[@name='order_note']"
+                   position="after">
+                <page string="Subsection" name="order_subsection" invisible="display_type != 'line_subsection'">
+                    <field name="name"/>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_purchase_order_reject_wizard" model="ir.ui.view">
+            <field name="name">purchase.order.reject.wizard.form</field>
+            <field name="model">purchase.order.reject.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Reject Purchase Order">
+                    <sheet>
+                        <group>
+                            <field name="po_id" invisible="0"/>
+                            <field name="reason_id"/>
+                            <field name="description"/>
+                        </group>
+                        <footer>
+                            <button string="Reject" type="object" name="action_reject" class="btn-danger"/>
+                            <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_purchase_order_reject_wizard" model="ir.actions.act_window">
+            <field name="name">Reject PO</field>
+            <field name="res_model">purchase.order.reject.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="purchase_order_rejection" model="ir.ui.view">
+            <field name="name">purchase.order.form.rejection</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="%(action_purchase_order_reject_wizard)d"
+                            type="action"
+                            string="Reject"
+                            class="btn-danger"
+                            context="{'default_po_id': id}"
+                            invisible="state != 'pending_approval'"/>
+
+                </xpath>
+
+            </field>
+        </record>
+        <!-- List View -->
+        <record id="view_purchase_order_rejection_reason_tree" model="ir.ui.view">
+            <field name="name">purchase.order.rejection.reason.tree</field>
+            <field name="model">purchase.order.rejection.reason</field>
+            <field name="arch" type="xml">
+                <list string="PO Rejection Reasons">
+                    <field name="name"/>
+                    <field name="description"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_purchase_order_rejection_reason_form" model="ir.ui.view">
+            <field name="name">purchase.order.rejection.reason.form</field>
+            <field name="model">purchase.order.rejection.reason</field>
+            <field name="arch" type="xml">
+                <form string="PO Rejection Reason">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action to open the menu -->
+        <record id="action_purchase_order_rejection_reason" model="ir.actions.act_window">
+            <field name="name">PO Rejection Reasons</field>
+            <field name="res_model">purchase.order.rejection.reason</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create reasons for rejecting Purchase Orders.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_purchase_order_rejection_reason"
+                  name="PO Rejection Reasons"
+                  parent="purchase_request.parent_menu_purchase_request"
+                  action="action_purchase_order_rejection_reason"/>
+
+    </data>
+</odoo>

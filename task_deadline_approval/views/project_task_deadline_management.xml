@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="view_date_change_wizard_form" model="ir.ui.view">
+            <field name="name">date.change.wizard.form</field>
+            <field name="model">date.change.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Change Dates">
+                    <group>
+                        <field name="task_id" readonly="1"/>
+                        <field name="reason"/>
+                    </group>
+
+                    <group string="Start Date">
+                        <field name="prev_date_begin" readonly="1"/>
+                        <field name="new_date_begin"/>
+                    </group>
+
+                    <group string="Deadline Date">
+                        <field name="prev_date_deadline" readonly="1"/>
+                        <field name="new_date_deadline"/>
+                    </group>
+
+                    <footer>
+                        <button string="Request Changes" type="object" name="action_change_dates" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_date_change_wizard" model="ir.actions.act_window">
+            <field name="name">Change Dates</field>
+            <field name="res_model">date.change.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <!--        action btn for change request-->
+
+        <record id="view_task_date_change_request_btn" model="ir.ui.view">
+            <field name="name">project.task.date.change.form.button</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button class="oe_stat_button"
+                            type="object"
+                            name="action_view_linked_change_req"
+                            icon="oi oi-flag"
+                            context="{
+                            'res_model': 'task.product.link',
+                            'domain': [('task_id', '=', id)],
+                            'default_task_id': id
+                        }">
+                        <field string="Requests" name="total_change_requests" widget="statinfo"/>
+                    </button>
+                </xpath>
+
+                <xpath expr="//header" position="inside">
+                    <button name="%(action_date_change_wizard)d"
+                            type="action"
+                            string="Request Date Change"
+                            class="btn-primary"
+                            context="{'default_task_id': id,
+                                      'default_prev_date_begin' : planned_date_begin,
+                                      'default_prev_date_deadline' : date_deadline,
+                            }"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_date_change_request_form" model="ir.ui.view">
+            <field name="name">date.change.request.form</field>
+            <field name="model">project.date.change.request</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button string="Reject"
+                                type="object"
+                                name="action_reject"
+                                class="btn-danger"
+                                invisible="state in ['done','reject']"/>
+
+                        <button string="Approve"
+                                type="object"
+                                name="action_approve"
+                                class="btn-primary"
+                                invisible="state in ['done','reject']"/>
+
+                        <button string="Reset"
+                                type="object"
+                                name="action_reset"
+                                class="btn-secondary"/>
+
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,reject,done"/>
+                    </header>
+
+                    <sheet>
+                        <group>
+                            <field name="task_id" readonly="1"/>
+                            <field name="reason"/>
+                        </group>
+
+                        <group string="Start Date">
+                            <field name="prev_date_begin" readonly="1"/>
+                            <field name="new_date_begin"/>
+                        </group>
+
+                        <group string="Deadline Date">
+                            <field name="prev_date_deadline" readonly="1"/>
+                            <field name="new_date_deadline"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_date_change_request_list" model="ir.ui.view">
+            <field name="name">date.change.request.list</field>
+            <field name="model">project.date.change.request</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="task_id" readonly="1"/>
+                    <field name="reason"/>
+                    <field name="prev_date_begin" readonly="1"/>
+                    <field name="new_date_begin"/>
+                    <field name="prev_date_deadline" readonly="1"/>
+                    <field name="new_date_deadline"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_project_date_change_req" model="ir.actions.act_window">
+            <field name="name">Date Change Requests</field>
+            <field name="res_model">project.date.change.request</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem id="menu_project_date_change_root"
+                  name="Date Change Requests"
+                  parent="project.menu_main_pm"
+                  action="action_project_date_change_req"
+                  sequence="50"/>
+
+    </data>
+</odoo>

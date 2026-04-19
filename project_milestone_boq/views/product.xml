@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+
+    <record id="product_template_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_policy']" position="after">
+                <field name="boq_category_id" options="{'no_open': True, 'no_create': True}"/>
+<!--                <field name="is_service"/>-->
+<!--                <field name="is_expense"/>-->
+            </xpath>
+        </field>
+    </record>
+
+    <!-- list View -->
+    <record id="view_boq_category_tree" model="ir.ui.view">
+        <field name="name">boq.category.list</field>
+        <field name="model">boq.category</field>
+        <field name="arch" type="xml">
+            <list string="BOQ Categories">
+                <field name="name"/>
+                <field name="product_type"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_boq_category_form" model="ir.ui.view">
+        <field name="name">boq.category.form</field>
+        <field name="model">boq.category</field>
+        <field name="arch" type="xml">
+            <form string="BOQ Category">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="product_type"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_boq_category" model="ir.actions.act_window">
+        <field name="name">BOQ Categories</field>
+        <field name="res_model">boq.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <menuitem id="menu_boq_category"
+              name="BOQ Categories"
+              parent="sale.prod_config_main"
+              action="action_boq_category"
+              sequence="10"/>
+
+</odoo>

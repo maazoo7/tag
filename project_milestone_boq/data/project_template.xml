@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- Create Task Types/Stages -->
+        <record id="project_stage_new" model="project.task.type">
+            <field name="name">New</field>
+            <field name="sequence">1</field>
+            <field name="fold" eval="False"/>
+        </record>
+
+        <record id="project_stage_in_progress" model="project.task.type">
+            <field name="name">In Progress</field>
+            <field name="sequence">5</field>
+            <field name="fold" eval="False"/>
+        </record>
+
+        <record id="project_stage_review" model="project.task.type">
+            <field name="name">Review</field>
+            <field name="sequence">10</field>
+            <field name="fold" eval="False"/>
+        </record>
+
+        <record id="project_stage_done" model="project.task.type">
+            <field name="name">Done</field>
+            <field name="sequence">15</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+        <record id="project_stage_cancelled" model="project.task.type">
+            <field name="name">Cancelled</field>
+            <field name="sequence">20</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+        <!-- Create Project Template -->
+        <record id="project_template_default" model="project.project">
+            <field name="name">Project Template</field>
+            <field name="active" eval="True"/>
+            <field name="allow_milestones" eval="True"/>
+            <field name="allow_billable" eval="True"/>
+            <field name="type_ids" eval="[(6, 0, [
+                ref('project_stage_new'),
+                ref('project_stage_in_progress'),
+                ref('project_stage_review'),
+                ref('project_stage_done'),
+                ref('project_stage_cancelled')
+            ])]"/>
+        </record>
+    </data>
+</odoo>

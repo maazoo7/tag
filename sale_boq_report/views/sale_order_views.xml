@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add BOQ fields to Sale Order form — in the Other Info tab -->
+    <record id="view_sale_order_form_boq" model="ir.ui.view">
+        <field name="name">sale.order.form.boq</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_info']" position="after">
+                <page string="BOQ Settings" name="boq_settings">
+                    <group string="Bill of Quantities Configuration">
+                        <field name="boq_profit_rate" string="Contractor Profit Rate (%)"/>
+                        <field name="boq_ocm_rate" string="OCM Rate (%)"/>
+                        <field name="boq_amount_in_words" string="Amount in Words"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
