@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_construction_contract_document">
+        <t t-call="web.external_layout">
+            <main>
+                <t t-set="doc" t-value="doc"/>
+                <t t-set="partner_name" t-value="doc.partner_id.name or ''"/>
+                <t t-set="project_name" t-value="doc.name or ''"/>
+                <t t-set="order_date" t-value="doc.date_order and doc.date_order.date()"/>
+                <t t-set="scope" t-value="doc._get_subcontract_scope()"/>
+
+                <div class="page" style="font-size:13px; line-height:1.45;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-top:6px;">
+                        <div style="font-size:26px; font-weight:800; letter-spacing:1px;">AUTO ARTIST</div>
+                        <div style="font-size:24px; font-weight:800; letter-spacing:1px;">TALKS</div>
+                    </div>
+                    <div style="margin-top:8px; border-top:2px solid #333; padding-top:6px; font-size:28px; font-weight:700;">BIDS AND AWARDS COMMITTEE OFFICE</div>
+
+                    <div style="text-align:center; font-size:46px; font-weight:800; margin:26px 0 20px;">NOTICE OF AWARD</div>
+
+                    <div style="margin-bottom:18px;">
+                        <t t-if="order_date"><t t-esc="order_date.strftime('%b %d, %Y')"/></t>
+                        <t t-if="not order_date">Jan 15, 2024</t>
+                    </div>
+
+                    <div style="font-weight:700;">ENGR. LORENZO TAN</div>
+                    <div>Owner/ Manager</div>
+                    <div><t t-esc="partner_name or 'Tagusao Construction and Trading Inc.'"/></div>
+                    <div>VBC Compound, Rizal Ave. Ext. Bgy. Bancao Bancao</div>
+                    <div>Puerto Princesa City, Palawan Philippines 5300</div>
+
+                    <p style="margin-top:18px;">Dear Mr. Tan,</p>
+
+                    <p>
+                        We are pleased to inform you that Auto Artist Inc. Bid and Awards Committee (BAC)
+                        has reviewed and evaluated the submitted proposal for the <strong>HYUNDAI PALAWAN ONE-STOREY COMMERCIAL BUILDING WITH MEZZANINE PROJECT</strong>.
+                        After careful consideration, we are delighted to officially award the contract to
+                        <strong><t t-esc="partner_name or 'TAGUSAO CONSTRUCTION AND TRADING INC.'"/></strong>.
+                    </p>
+                    <p>
+                        We believe that your company&apos;s expertise, experience, and commitment make you the ideal choice
+                        for successfully executing this project. We are confident that your team will meet and exceed
+                        our expectations throughout the construction process.
+                    </p>
+                    <p>
+                        Please review the attached contract documents, which include detailed project specifications,
+                        drawings, and any other relevant information. Kindly sign and return a copy of this letter as an
+                        acknowledgment of your acceptance of the award and agreement to the terms and conditions outlined.
+                    </p>
+                    <p>
+                        We look forward to a successful partnership and the timely completion of the
+                        <strong><t t-esc="project_name or 'Hyundai Palawan Commercial Building Project'"/></strong>.
+                    </p>
+                    <p>Congratulations on being selected, and we look forward to a fruitful collaboration.</p>
+                    <p>Very truly yours,</p>
+
+                    <div style="margin-top:30px; font-weight:700;">MR. WINSTON ONG LO</div>
+                    <div>Board of Members/ Owner</div>
+
+                    <div style="margin-top:48px;">CONFORME:</div>
+                    <div style="margin-top:56px; border-top:1px solid #000; width:340px;"></div>
+                    <div>(Name of the bidder representative of the bidder)</div>
+                    <div style="margin-top:16px;">Date: __________________</div>
+                </div>
+
+                <div class="page" style="font-size:13px; line-height:1.5;">
+                    <div style="text-align:center; font-size:40px; font-weight:800; margin-top:8px;">CONSTRUCTION CONTRACT</div>
+
+                    <p style="margin-top:16px;">KNOW ALL MEN BY THESE PRESENTS:</p>
+                    <p>
+                        This Contract, made and entered into this ___th day of January, 2024 by between:
+                    </p>
+                    <p style="margin-left:24px;">
+                        <strong>AUTO ARTIST, INC.</strong>, a corporation duly organized and existing under the laws of the
+                        Philippines, with principal office address at South Road National Highway, Barangay Sicsican,
+                        Puerto Princesa City, Palawan. Duly represented by its President <strong>DENNIS TAN</strong>,
+                        hereinafter referred to as the <strong>PROJECT OWNER</strong>, being the FIRST PARTY;
+                    </p>
+                    <p style="text-align:center;">-and-</p>
+                    <p style="margin-left:24px;">
+                        <strong><t t-esc="partner_name or 'TAGUSAO CONSTRUCTION AND TRADING INC.'"/></strong>, a corporation duly organized and
+                        existing under the laws of the Philippines, with principal office address at Rizal Avenue
+                        Extension, Bgy. Bancao Bancao, Puerto Princesa City, Philippines duly presented herein by its
+                        President, <strong>ENGR. LORENZO G. TAN II</strong>, hereinafter referred to as the <strong>CONTRACTOR</strong>,
+                        being the SECOND PARTY.
+                    </p>
+
+                    <p style="text-align:center; margin-top:26px;">WITNESSETH: That —</p>
+                    <p>WHEREAS, the PROJECT OWNER is proposing to build a car sales and service center known as <strong>HYUNDAI PALAWAN</strong>, hereinafter referred to as the PROJECT;</p>
+                    <p>WHEREAS, the PROJECT OWNER has issued an Invitation to Bid and conducted a project bidding and the CONTRACTOR has been awarded the Contract to Build the PROJECT;</p>
+                    <p>WHEREAS, the CONTRACTOR has presented itself as fully qualified and competent to undertake the works thru the bidding process;</p>
+                    <p>WHEREAS, the CONTRACTOR has expressed willingness to undertake and successfully complete the works to the satisfaction of the PROJECT OWNER and in conformity with the Contract Documents and the terms and conditions herein set forth;</p>
+                    <p>NOW, THEREFORE, for and in consideration of the above premises and the covenants hereinafter stipulated the PROJECT OWNER and the CONTRACTOR, jointly hereafter referred to as the PARTIES hereby agree as follows:</p>
+                </div>
+
+                <div class="page" style="font-size:13px; line-height:1.5;">
+                    <div style="text-align:center; font-weight:800;">ARTICLE 1</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline; margin-bottom:8px;">SCOPE OF WORK</div>
+                    <p>1.1 The CONTRACTOR shall undertake the construction of the PROJECT for the PROJECT OWNER in accordance with the Construction Drawings, Technical Specifications, Contract Price, General Conditions and all documents and undertakings that are specified as Contract Documents under Article II of this Contract.</p>
+                    <p>1.2 The works to be done under this Contract shall include the furnishing by the CONTRACTOR of all labor services, construction materials, tools, consumables, equipment, supplies and the construction management performance by the CONTRACTOR of all operations necessary for the complete implementation under the construction package of the Project.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:20px;">ARTICLE 2</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline; margin-bottom:8px;">THE CONTRACT DOCUMENTS</div>
+                    <p>2.1 The following documents which are respectively marked as annexes hereto and made an integral part hereof shall, except as modified by mutual agreement of the parties, form part this Agreement.</p>
+                    <p>Annex 1. Bid Documents (Invitation to Bid; Instruction to Bidders; General and Special Conditions of Contract; Technical Specifications; Construction Drawings; Bid Bulletins/Supplemental Notices)</p>
+                    <p>Annex 2. Contractor&apos;s Bid Form including Authority of Signing Official; Bid Prices in the Bid Schedule; Construction Schedule and S-Curve; Project Organizational Chart; Manpower Schedule; Equipment Utilization Schedule; Cash Flow by the month and Payments Schedule.</p>
+                    <p>Annex 3. Performance Bond with Official Receipt</p>
+                    <p>Annex 4. Credit line issued by an authorized bank</p>
+                    <p>Annex 5. Notice of Contract Award</p>
+                    <p>Annex 6. Letter of Contract Award Acceptance from the CONTRACTOR</p>
+                    <p>Annex 7. Notice To Proceed</p>
+                </div>
+
+                <div class="page" style="font-size:13px; line-height:1.5;">
+                    <div style="text-align:center; font-weight:800;">ARTICLE 3</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">CONTRACT PRICE</div>
+                    <p>3.1 As consideration for the full and faithful performance and accomplishment of all the obligations specified in Article I above, the OWNER shall pay the CONTRACTOR the total contract price of <strong>SEVENTY MILLION PESOS (70,000,000.00)</strong> inclusive of VAT and other applicable taxes.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 4</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">TERMS OF PAYMENT</div>
+                    <p>4.1 <strong>Advance Payment:</strong> Within fifteen (15) days from the date of the Notice To Proceed, an amount equivalent to thirty percent (30%) of the Contract Price shall be paid to the CONTRACTOR and shall be repaid through deductions in each monthly progress billings.</p>
+                    <p>4.2 <strong>Progress Billings:</strong> Progress Billings can be submitted at any time after the construction has officially started and should be at least 20 days thereafter but in no case submitted more than twice in a month.</p>
+                    <p>4.3 <strong>Payments for Progress Billings:</strong> Payment shall be based on the estimated and reasonably or technically justified physical work accomplishment that is satisfactorily conforming to the drawings and technical specifications.</p>
+                    <p>4.4 <strong>Recoupment of Advance Payment:</strong> The advance payment shall be deducted from each billing payment equivalent to the same 20% valuation until fully paid up.</p>
+                    <p>4.5 <strong>Final Payment:</strong> Final payment shall be subject to Certificate of Work Acceptance and Final Statement of Billing evaluation.</p>
+                    <p>4.6 <strong>Retention Money:</strong> Ten percent (10%) of each progress payment shall be retained and released according to the approved retention release milestones.</p>
+                    <p>4.7 <strong>Withholding Tax by the PROJECT OWNER:</strong> The 2% withholding tax shall be computed from the Contract Price minus 12% VAT.</p>
+                    <p>4.8 <strong>Price Escalation:</strong> There will be no adjustment of contract price due to escalation of prices of materials and equipment.</p>
+                </div>
+
+                <div class="page" style="font-size:13px; line-height:1.5;">
+                    <div style="text-align:center; font-weight:800;">ARTICLE 5</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">COMMENCEMENT AND COMPLETION OF WORK</div>
+                    <p>5.1 The CONTRACTOR shall commence work within seven (7) calendar days from receipt of written Notice to Proceed and shall finish, complete and turn-over the Project within <strong>Twelve (12) calendar months</strong>, unless extended in accordance with the Contract.</p>
+                    <p>5.2 Contract Day-One shall commence seven (7) calendar days from receipt and acceptance of the NTP.</p>
+                    <p>5.3 Construction Day-End shall expire on the last day of the twelve (12) calendar months from Contract Day-One.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 6</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">LIQUIDATED DAMAGES</div>
+                    <p>6.1 Time is of the essence of this Agreement. In the event that the Contractor refuses or fails to complete the work within the prescribed time, the PROJECT OWNER is authorized to deduct liquidated damages from any amount due or which may become due to the CONTRACTOR.</p>
+                    <p>6.2 The liquidated damages shall be ONE TENTH OF ONE PERCENT (0.01%) of the Total Contract Price for each calendar day of delay until the contracted work is completed and accepted by the PROJECT OWNER.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 7</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">CHANGE ORDER AND/OR ADDITIONAL WORK</div>
+                    <p>7.1 The PROJECT OWNER may, at any time, by written order, make changes in schedule and work required under this Agreement and corresponding equitable adjustment shall be made upon agreement by the parties.</p>
+                    <p>7.2 Additional work carried out for purposes of the Project in addition to contracted work shall be reflected by written extra work order or supplemental contract.</p>
+                    <p>7.3 Change Orders and additional works shall only be undertaken after both parties have agreed in writing on the adjustments in contract price and completion date.</p>
+                </div>
+
+                <div class="page" style="font-size:13px; line-height:1.5;">
+                    <div style="text-align:center; font-weight:800;">ARTICLE 8</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">CONTRACTOR&apos;S LIABILITIES</div>
+                    <p>8.1 No employer-employee relationship exists between the PROJECT OWNER and the CONTRACTOR workers, employees and staff.</p>
+                    <p>8.2 The CONTRACTOR shall protect and hold the PROJECT OWNER harmless from claims, liabilities, damages, and costs arising from the performance of the work.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 9</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">PERFORMANCE SURETY BONDS</div>
+                    <p>9.1 The CONTRACTOR shall furnish a Performance Bond equivalent to twenty percent (20%) of the Contract Price for faithful performance.</p>
+                    <p>9.2 The PROJECT OWNER may increase security or require replacement security if circumstances warrant protecting the interest of the OWNER.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 10</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">WARRANTY BOND AS GUARANTEE AFTER PROJECT COMPLETION</div>
+                    <p>10.1 The CONTRACTOR shall guarantee the completed works against latent defects for one (1) year from the date of Certificate of Acceptance by posting a Warranty Bond equivalent to fifteen percent (15%) of the total contract price.</p>
+                    <p>10.2 The CONTRACTOR shall rectify defects at its own expense, except those due to wear and tear, intentional or accidental breakage.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 11</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">CONTRACTOR&apos;S ALL RISK INSURANCE (CARI)</div>
+                    <p>11.1 In case the CONTRACTOR causes delay, the CONTRACTOR shall obtain CARI at its own expense.</p>
+                    <p>11.2 In case delay is caused by natural phenomenon or OWNER action, responsibility for CARI shall be subject to discussion.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 12</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">DEDUCTIONS</div>
+                    <p>12.1 OWNER deductions in scope from the final contract agreement must be supported by formal written claim by the CONTRACTOR and subject to OWNER approval.</p>
+                </div>
+
+                <div class="page" style="font-size:13px; line-height:1.5;">
+                    <div style="text-align:center; font-weight:800;">ARTICLE 13</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">RIGHTS OF THE PROJECT OWNER</div>
+                    <p>13.1 Rights include inspection of the project, approval of contract and change orders, approval of supplemental contracts, allowance of time extension, and suspension/resumption of work.</p>
+                    <p>13.2 Any breach may entitle the PROJECT OWNER to suspend funding until settled or remedied.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 14</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">ACCEPTANCE OF WORK</div>
+                    <p>14.1 Acceptance is evidenced only by the Certificate of Acceptance issued by the PROJECT OWNER. Before final payment, CONTRACTOR shall execute an affidavit accepting full payment and settlement of claims.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 15</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">NON-WAIVER</div>
+                    <p>15.1 No inspection, payment, possession or extension by PROJECT OWNER shall be construed as waiver of rights of action for breach of contract.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 16</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">GENERAL PROVISIONS</div>
+                    <p>16.1 Supplementary use of contract documents, conflict resolution of bid documents and contract, and binding conditions shall apply.</p>
+                    <p>16.2 Contractor shall comply with national and local laws, ordinances and regulations and shall be responsible for damages for non-observance.</p>
+                    <p>16.3 Modifications, transfers, assignments and subcontracting require mutual written agreement.</p>
+                    <p>16.4 Invalidity of any clause shall not affect validity of remaining terms.</p>
+                    <p>16.5 Material breach entitles PROJECT OWNER to rescind contract upon written notice.</p>
+                </div>
+
+                <div class="page" style="font-size:13px; line-height:1.5;">
+                    <div style="text-align:center; font-weight:800;">ARTICLE 17</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">ADDITIONAL CONDITIONS</div>
+                    <p>17.1 PROJECT OWNER and designated CONSTRUCTION MANAGER shall at all reasonable time have access to project site and workshops to check materials and workmanship.</p>
+                    <p>17.2 CONTRACTOR shall submit projected completion chart (PERT/CPM) and align changes with OWNER supplied items.</p>
+                    <p>17.3 Upon completion, CONTRACTOR shall submit affidavit of compliance with labor laws and SSS rules.</p>
+                    <p>17.4 OWNER supplied items (OSM) shall be made available long before utility to avoid delay; CONTRACTOR shall coordinate delivery and installation sequencing.</p>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 18</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">OWNER SUPPLIED ITEMS</div>
+                    <p>18.1 The following material/equipment items shall be provided by PROJECT OWNER while CONTRACTOR/TRADECON shall provide labor and tools for installation and construction:</p>
+                    <ol style="margin:0 0 0 26px;">
+                        <li><strong>ARCHITECTURAL</strong>
+                            <ol type="a">
+                                <li>Exterior/Interior G.I. Sheet Wall Works</li>
+                                <li>Roof Sheet Covering with Insulation Works</li>
+                                <li>Ceramic Tile and tactile</li>
+                                <li>Laminated veneer (highlight zone)</li>
+                                <li>Cabinets and consultation partitions (entertainment area)</li>
+                                <li>Brand wall</li>
+                                <li>Lobby Counter</li>
+                                <li>Louver Blinds</li>
+                                <li>Schedule of Doors</li>
+                                <li>Aluminum Cladding</li>
+                                <li>Schedule of Windows</li>
+                                <li>Signages</li>
+                            </ol>
+                        </li>
+                        <li><strong>PLUMBING WORKS</strong></li>
+                        <li><strong>ELECTRICAL WORKS</strong></li>
+                        <li><strong>ELECTRONIC WORKS</strong></li>
+                    </ol>
+                </div>
+
+                <div class="page" style="font-size:13px; line-height:1.5;">
+                    <div style="text-align:center; font-weight:800;">ARTICLE 19</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">EXCLUSIONS</div>
+                    <p>19.1 The following items shall be provided by the PROJECT OWNER but the CONTRACTOR shall still provide labor services for installation and construction:</p>
+                    <ol style="margin:0 0 0 26px;">
+                        <li><strong>ARCHITECTURAL</strong></li>
+                        <li><strong>PLUMBING WORKS</strong></li>
+                        <li><strong>ELECTRICAL WORKS</strong></li>
+                        <li><strong>ELECTRONICS WORKS</strong></li>
+                    </ol>
+
+                    <div style="text-align:center; font-weight:800; margin-top:16px;">ARTICLE 20</div>
+                    <div style="text-align:center; font-weight:800; text-decoration:underline;">TRADECON</div>
+                    <p>20.1 The following scope or project items shall be provided by TRADECON and shall not included in this contract agreement between GENERAL CONTRACTOR and OWNER.</p>
+                    <ol style="margin:0 0 0 26px;">
+                        <li><strong>ARCHITECTURAL WORKS</strong></li>
+                        <li><strong>ELECTRICAL WORKS</strong></li>
+                        <li><strong>ELECTRONICS WORKS</strong></li>
+                        <li><strong>MECHANICAL WORKS</strong></li>
+                        <li><strong>FIRE PROTECTION SYSTEM</strong></li>
+                    </ol>
+
+                    <div style="margin-top:24px;">IN WITNESS WHEREOF, the parties have affixed their signatures.</div>
+                    <table style="width:100%;margin-top:45px;border-collapse:collapse;">
+                        <tr>
+                            <td style="width:45%; padding-right:22px; vertical-align:top;">
+                                <div style="margin-top:55px; border-top:1px solid #000;"></div>
+                                <div style="font-weight:700; text-align:center; margin-top:8px;">FIRST PARTY</div>
+                                <div style="margin-top:16px;">By:</div>
+                                <div style="margin-top:30px; text-decoration:underline; font-weight:700;">DENNIS TAN</div>
+                                <div>Project Owner</div>
+                            </td>
+                            <td style="width:10%;"></td>
+                            <td style="width:45%; padding-left:22px; vertical-align:top;">
+                                <div style="margin-top:55px; border-top:1px solid #000;"></div>
+                                <div style="font-weight:700; text-align:center; margin-top:8px;">SECOND PARTY</div>
+                                <div style="margin-top:16px;">By:</div>
+                                <div style="margin-top:30px; text-decoration:underline; font-weight:700;"><t t-esc="partner_name"/></div>
+                                <div>Contractor</div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <t t-if="doc.subcontract_scope_with_lines and scope.get('sections')">
+                        <div style="margin-top:38px;">
+                            <div style="font-weight:700; margin-bottom:10px;">SECTION &gt; PRODUCT DETAILS</div>
+                            <t t-foreach="scope['sections']" t-as="section">
+                                <div style="font-weight:700; margin-top:8px;">
+                                    <t t-esc="'%s.) %s' % (section_index + 1, section.get('name') or 'GENERAL')"/>
+                                </div>
+                                <t t-foreach="section.get('subsections', [])" t-as="subsection">
+                                    <div style="margin-left:20px; font-weight:700;">
+                                        <t t-esc="'%s. %s' % ((['I','II','III','IV','V','VI','VII','VIII','IX','X'][subsection_index] if subsection_index &lt; 10 else str(subsection_index + 1)), subsection.get('name') or 'GENERAL')"/>
+                                    </div>
+                                    <table style="width:100%; margin:3px 0 8px 28px; border-collapse:collapse; font-size:12px;">
+                                        <t t-foreach="subsection.get('lines', [])" t-as="scope_line">
+                                            <tr>
+                                                <td style="padding:1px 4px; width:48%;"><t t-esc="scope_line['name']"/></td>
+                                                <td style="padding:1px 4px; width:12%; text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['qty'])"/></td>
+                                                <td style="padding:1px 4px; width:12%; text-align:center;"><t t-esc="scope_line['uom']"/></td>
+                                                <td style="padding:1px 4px; width:14%; text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['unit_price'])"/></td>
+                                                <td style="padding:1px 4px; width:14%; text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['amount'])"/></td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </main>
+        </t>
+    </template>
+
+    <template id="report_construction_contract">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="sale_boq_report.report_construction_contract_document"/>
+        </t>
+    </template>
+</odoo>
