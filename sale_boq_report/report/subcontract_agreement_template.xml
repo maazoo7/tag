@@ -62,19 +62,6 @@
                                         <div style="margin-left:30px;">
                                             <t t-esc="'%s. %s' % ((['I','II','III','IV','V','VI','VII','VIII','IX','X'][subsection_index] if subsection_index &lt; 10 else str(subsection_index + 1)), subsection.get('name') or 'GENERAL')"/>
                                         </div>
-                                        <t t-if="doc.subcontract_scope_with_lines and subsection.get('lines')">
-                                            <table style="width:100%;margin:4px 0 8px 48px;border-collapse:collapse;font-size:12px;">
-                                                <t t-foreach="subsection['lines']" t-as="scope_line">
-                                                    <tr>
-                                                        <td style="padding:1px 4px;width:48%;"><t t-esc="scope_line['name']"/></td>
-                                                        <td style="padding:1px 4px;width:12%;text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['qty'])"/></td>
-                                                        <td style="padding:1px 4px;width:12%;text-align:center;"><t t-esc="scope_line['uom']"/></td>
-                                                        <td style="padding:1px 4px;width:14%;text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['unit_price'])"/></td>
-                                                        <td style="padding:1px 4px;width:14%;text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['amount'])"/></td>
-                                                    </tr>
-                                                </t>
-                                            </table>
-                                        </t>
                                     </t>
                                 </t>
                                 <t t-if="not section.get('subsections')">
@@ -197,6 +184,33 @@
                             <td style="width:45%;border-top:1px solid #000;">&#160;</td>
                         </tr>
                     </table>
+
+                    <t t-if="doc.subcontract_scope_with_lines and scope.get('sections')">
+                        <div style="margin-top:40px;">
+                            <div style="font-weight:700;margin-bottom:8px;">SECTION &gt; PRODUCT DETAILS</div>
+                            <t t-foreach="scope['sections']" t-as="section">
+                                <div style="font-weight:700;margin-top:10px;">
+                                    <t t-esc="'%s.) %s' % (section_index + 1, section.get('name') or 'GENERAL')"/>
+                                </div>
+                                <t t-foreach="section.get('subsections', [])" t-as="subsection">
+                                    <div style="margin-left:20px;font-weight:700;">
+                                        <t t-esc="'%s. %s' % ((['I','II','III','IV','V','VI','VII','VIII','IX','X'][subsection_index] if subsection_index &lt; 10 else str(subsection_index + 1)), subsection.get('name') or 'GENERAL')"/>
+                                    </div>
+                                    <table style="width:100%;margin:4px 0 8px 30px;border-collapse:collapse;font-size:12px;">
+                                        <t t-foreach="subsection.get('lines', [])" t-as="scope_line">
+                                            <tr>
+                                                <td style="padding:1px 4px;width:48%;"><t t-esc="scope_line['name']"/></td>
+                                                <td style="padding:1px 4px;width:12%;text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['qty'])"/></td>
+                                                <td style="padding:1px 4px;width:12%;text-align:center;"><t t-esc="scope_line['uom']"/></td>
+                                                <td style="padding:1px 4px;width:14%;text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['unit_price'])"/></td>
+                                                <td style="padding:1px 4px;width:14%;text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['amount'])"/></td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
                 </div>
             </main>
         </t>
