@@ -24,7 +24,7 @@ Footer calculations:
   Total Constr.   = TDC + Profit + OCM + VAT
 """
 
-from odoo import models
+from odoo import fields, models
 
 PROFIT_RATE = 0.08
 OCM_RATE = 0.1075464234
@@ -45,6 +45,11 @@ def _col(category_name):
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
+
+    subcontract_scope_with_lines = fields.Boolean(
+        string='Subcontract Scope With Lines',
+        help='If enabled, the subcontract agreement scope prints subcontracted product lines under each subsection.',
+    )
 
     def _get_boq_summary(self):
         lines = self.order_line.sorted('sequence')
@@ -280,4 +285,67 @@ class SaleOrder(models.Model):
             'sections': sections,
             'found': bool(sections),
             'grand_total': sum(section['total'] for section in sections),
+        }
+
+    def _get_subcontract_scope(self):
+        """Return subcontracted scope grouped by section/subsection."""
+        self.ensure_one()
+
+        sections_map = {}
+        section_order = []
+        current_section = 'GENERAL'
+        current_subsection = 'GENERAL'
+
+        def _ensure(section_name, subsection_name):
+            if section_name not in sections_map:
+                sections_map[section_name] = {
+                    'name': section_name,
+                    'subsections': [],
+                    'subsections_map': {},
+                }
+                section_order.append(section_name)
+
+            section = sections_map[section_name]
+            if subsection_name not in section['subsections_map']:
+                subsection = {
+                    'name': subsection_name,
+                    'lines': [],
+                }
+                section['subsections_map'][subsection_name] = subsection
+                section['subsections'].append(subsection)
+
+            return section['subsections_map'][subsection_name]
+
+        for line in self.order_line.sorted('sequence'):
+            if line.display_type == 'line_section':
+                current_section = line.name or 'SECTION'
+                current_subsection = 'GENERAL'
+                continue
+
+            if line.display_type == 'line_subsection':
+                current_subsection = line.name or 'SUBSECTION'
+                continue
+
+            if line.display_type:
+                continue
+
+            if getattr(line, 'x_supplied_by', False) != 'subcontracted':
+                continue
+
+            subsection = _ensure(current_section, current_subsection)
+            subsection['lines'].append({
+                'name': line.name or (line.product_id.display_name if line.product_id else ''),
+                'qty': line.product_uom_qty,
+                'uom': line.product_uom.name if line.product_uom else '',
+                'unit_price': line.price_unit,
+                'amount': line.price_subtotal,
+            })
+
+        sections = [sections_map[name] for name in section_order]
+        for section in sections:
+            section.pop('subsections_map', None)
+
+        return {
+            'sections': sections,
+            'found': bool(sections),
         }

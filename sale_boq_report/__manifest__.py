@@ -8,6 +8,9 @@
     'data': [
         'report/sale_boq_report_template.xml',
         'report/sale_boq_report_action.xml',
+        'report/subcontract_agreement_template.xml',
+        'report/subcontract_agreement_action.xml',
+        'views/subcontract_agreement_settings.xml',
     ],
     'installable': True,
     'application': False,
