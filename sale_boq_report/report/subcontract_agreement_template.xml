@@ -9,14 +9,8 @@
                 <t t-set="project_name" t-value="doc.name or ''"/>
                 <t t-set="order_date" t-value="doc.date_order and doc.date_order.date()"/>
 
-                <div class="page" style="font-size:18px;line-height:1.55;">
-                    <div style="text-align:center;margin-bottom:20px;">
-                        <div style="font-size:40px;font-weight:800;letter-spacing:2px;">TAGUSAO</div>
-                        <div style="font-size:18px;font-weight:700;margin-top:-8px;">CONSTRUCTION &amp; TRADING INC.</div>
-                        <div style="font-size:12px;">VRC Compound, Rizal Avenue Ext., Brgy. Bancao-Bancao, Puerto Princesa City, Palawan</div>
-                    </div>
-
-                    <div style="text-align:center;font-size:42px;font-weight:700;line-height:1.25;margin:30px 0 20px;">
+                <div class="page" style="font-size:14px;line-height:1.55;">
+                    <div style="text-align:center;font-size:24px;font-weight:700;line-height:1.3;margin:8px 0 14px;">
                         SUBCONTRACT AGREEMENT<br/>
                         FOR SUPPLY OF MATERIALS AND LABOR COST<br/>
                         (ACP INSTALLATION)
@@ -56,7 +50,7 @@
                     <p style="margin-left:24px;">
                         a.) The <strong>SECOND PARTY&apos;s</strong> scope of works shall include but not limited to the following:
                     </p>
-                    <t t-set="scope" t-value="doc._get_boq_detailed_estimate()"/>
+                    <t t-set="scope" t-value="doc._get_subcontract_scope()"/>
                     <div style="margin-left:72px;">
                         <t t-if="scope.get('sections')">
                             <t t-foreach="scope['sections']" t-as="section">
@@ -66,7 +60,7 @@
                                 <t t-if="section.get('subsections')">
                                     <t t-foreach="section['subsections']" t-as="subsection">
                                         <div style="margin-left:30px;">
-                                            <t t-esc="'%s. %s' % (chr(73 + subsection_index), subsection.get('name') or 'GENERAL')"/>
+                                            <t t-esc="'%s. %s' % ((['I','II','III','IV','V','VI','VII','VIII','IX','X'][subsection_index] if subsection_index &lt; 10 else str(subsection_index + 1)), subsection.get('name') or 'GENERAL')"/>
                                         </div>
                                     </t>
                                 </t>
@@ -77,13 +71,12 @@
                         </t>
                         <t t-if="not scope.get('sections')">
                             <div>1.) GENERAL</div>
-                            <div style="margin-left:30px;">I. Supply of materials</div>
-                            <div style="margin-left:30px;">II. Supply of labor</div>
+                            <div style="margin-left:30px;">I. No subcontracted scope lines found.</div>
                         </t>
                     </div>
                 </div>
 
-                <div class="page" style="font-size:18px;line-height:1.55;">
+                <div class="page" style="font-size:14px;line-height:1.55;">
                     <p style="margin-left:24px;">b.) Contract conditions</p>
                     <div style="margin-left:60px;">
                         <div>a.&#160;&#160;Materials and Installation must be in accordance to the plans provided and specifications provided as approved by the designer.</div>
@@ -140,7 +133,7 @@
                     </p>
                 </div>
 
-                <div class="page" style="font-size:18px;line-height:1.55;">
+                <div class="page" style="font-size:14px;line-height:1.55;">
                     <p>
                         Retention of Ten (10%) percent shall be released one (1) Months upon the completion and
                         turnover of all the works stipulated in this contract and no defects or poor workmanship will be
@@ -160,21 +153,23 @@
 
                     <p style="margin-top:60px;">TAGUSAO CONSTRUCTION &amp; TRADING INC.</p>
 
-                    <table style="width:100%;margin-top:70px;">
+                    <table style="width:100%;margin-top:70px;border-collapse:collapse;">
                         <tr>
                             <td style="width:45%;padding-right:20px;vertical-align:top;">
-                                <div style="border-top:1px solid #000;margin-bottom:8px;">&#160;</div>
-                                <div style="font-weight:700;text-align:center;">FIRST PARTY</div>
+                                <div style="height:60px;"></div>
+                                <div style="border-top:1px solid #000;height:1px;"></div>
+                                <div style="font-weight:700;text-align:center;margin-top:10px;">FIRST PARTY</div>
                                 <div style="margin-top:14px;">By:</div>
-                                <div style="margin-top:40px;font-weight:700;text-decoration:underline;">ENGR. LORENZO G. TAN II</div>
+                                <div style="margin-top:34px;font-weight:700;text-decoration:underline;">ENGR. LORENZO G. TAN II</div>
                                 <div>General Manager - TCATI</div>
                             </td>
                             <td style="width:10%;"></td>
                             <td style="width:45%;padding-left:20px;vertical-align:top;">
-                                <div style="border-top:1px solid #000;margin-bottom:8px;">&#160;</div>
-                                <div style="font-weight:700;text-align:center;">SECOND PARTY</div>
+                                <div style="height:60px;"></div>
+                                <div style="border-top:1px solid #000;height:1px;"></div>
+                                <div style="font-weight:700;text-align:center;margin-top:10px;">SECOND PARTY</div>
                                 <div style="margin-top:14px;">By:</div>
-                                <div style="margin-top:40px;font-weight:700;text-decoration:underline;"><t t-esc="partner_name"/></div>
+                                <div style="margin-top:34px;font-weight:700;text-decoration:underline;"><t t-esc="partner_name"/></div>
                                 <div>Subcontractor</div>
                             </td>
                         </tr>

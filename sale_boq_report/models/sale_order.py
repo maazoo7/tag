@@ -281,3 +281,55 @@ class SaleOrder(models.Model):
             'found': bool(sections),
             'grand_total': sum(section['total'] for section in sections),
         }
+
+    def _get_subcontract_scope(self):
+        """Return section/subsection structure for subcontracted product lines only."""
+        self.ensure_one()
+
+        sections_map = {}
+        section_order = []
+        current_section = 'GENERAL'
+        current_subsection = 'GENERAL'
+
+        def _ensure(section_name, subsection_name):
+            if section_name not in sections_map:
+                sections_map[section_name] = {
+                    'name': section_name,
+                    'subsections': [],
+                    'subsections_map': {},
+                }
+                section_order.append(section_name)
+
+            section = sections_map[section_name]
+            if subsection_name not in section['subsections_map']:
+                subsection = {'name': subsection_name}
+                section['subsections_map'][subsection_name] = subsection
+                section['subsections'].append(subsection)
+
+        for line in self.order_line.sorted('sequence'):
+            if line.display_type == 'line_section':
+                current_section = line.name or 'SECTION'
+                current_subsection = 'GENERAL'
+                continue
+
+            if line.display_type == 'line_subsection':
+                current_subsection = line.name or 'SUBSECTION'
+                continue
+
+            if line.display_type:
+                continue
+
+            supplied_by = getattr(line, 'x_supplied_by', False)
+            if supplied_by != 'subcontracted':
+                continue
+
+            _ensure(current_section, current_subsection)
+
+        sections = [sections_map[name] for name in section_order]
+        for section in sections:
+            section.pop('subsections_map', None)
+
+        return {
+            'sections': sections,
+            'found': bool(sections),
+        }
