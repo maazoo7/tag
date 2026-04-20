@@ -225,6 +225,60 @@
                     </div>
 
                 </div>
+
+                <t t-set="arch" t-value="doc._get_boq_architectural_details()"/>
+                <div class="page">
+                    <div style="text-align:center;margin-bottom:10px;">
+                        <div style="font-weight:800;font-size:13px;letter-spacing:1px;">BILL OF QUANTITIES</div>
+                        <div style="font-size:11px;">DETAILED ESTIMATE - ARCHITECTURAL</div>
+                    </div>
+
+                    <table style="width:100%;border-collapse:collapse;font-size:9px;">
+                        <thead>
+                            <tr style="text-align:center;font-weight:700;">
+                                <th style="border:1px solid #000;padding:4px;text-align:left;width:50%;">Description</th>
+                                <th style="border:1px solid #000;padding:4px;width:10%;">Qty</th>
+                                <th style="border:1px solid #000;padding:4px;width:10%;">Unit</th>
+                                <th style="border:1px solid #000;padding:4px;width:14%;">Unit Cost</th>
+                                <th style="border:1px solid #000;padding:4px;width:16%;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="not arch['found']">
+                                <tr>
+                                    <td colspan="5" style="border:1px solid #ccc;padding:8px;text-align:center;font-style:italic;">
+                                        No ARCHITECTURAL section was found in the BOQ lines.
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-if="arch['found']">
+                                <t t-foreach="arch['rows']" t-as="row">
+                                    <tr t-if="row['type'] == 'section'" style="font-weight:700;background-color:#f5d76e;">
+                                        <td colspan="5" style="border:1px solid #999;padding:4px 6px;">
+                                            <t t-esc="row['name']"/>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="row['type'] == 'group'" style="font-weight:700;">
+                                        <td colspan="5" style="border:1px solid #ccc;padding:3px 6px;">
+                                            <t t-esc="row['name']"/>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="row['type'] == 'line'">
+                                        <td style="border:1px solid #ccc;padding:2px 6px;"><t t-esc="row['description']"/></td>
+                                        <td style="border:1px solid #ccc;padding:2px 4px;text-align:right;"><t t-esc="'{:,.2f}'.format(row['qty'])"/></td>
+                                        <td style="border:1px solid #ccc;padding:2px 4px;text-align:center;"><t t-esc="row['uom']"/></td>
+                                        <td style="border:1px solid #ccc;padding:2px 4px;text-align:right;"><span style="float:left;">P</span><t t-esc="'{:,.2f}'.format(row['unit_cost'])"/></td>
+                                        <td style="border:1px solid #ccc;padding:2px 4px;text-align:right;"><span style="float:left;">P</span><t t-esc="'{:,.2f}'.format(row['amount'])"/></td>
+                                    </tr>
+                                    <tr t-if="row['type'] == 'subtotal'" style="font-weight:700;">
+                                        <td colspan="4" style="border:1px solid #ccc;padding:2px 6px;text-align:right;"><t t-esc="row['label']"/></td>
+                                        <td style="border:1px solid #ccc;padding:2px 4px;text-align:right;"><span style="float:left;">P</span><t t-esc="'{:,.2f}'.format(row['amount'])"/></td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
             </main>
         </t>
     </template>
