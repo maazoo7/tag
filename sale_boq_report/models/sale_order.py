@@ -24,15 +24,14 @@ Footer calculations:
   Total Constr.   = TDC + Profit + OCM + VAT
 """
 
-import re
 from odoo import models
 
 PROFIT_RATE = 0.08
-OCM_RATE    = 0.1075464234
-VAT_RATE    = 0.12
+OCM_RATE = 0.1075464234
+VAT_RATE = 0.12
 
 _EQUIPMENT_KW = {'equipment', 'tool', 'tools', 'machinery', 'machine'}
-_LABOUR_KW    = {'labour', 'labor', 'manpower', 'workforce', 'worker'}
+_LABOUR_KW = {'labour', 'labor', 'manpower', 'workforce', 'worker'}
 
 
 def _col(category_name):
@@ -53,33 +52,33 @@ class SaleOrder(models.Model):
         rows = []
 
         # Counters
-        section_num   = 0       # increments on each line_section  → 1, 2, 3 …
-        sub_idx       = 0       # increments on each line_note      → 0=A, 1=B …
+        section_num = 0  # increments on each line_section  → 1, 2, 3 …
+        sub_idx = 0  # increments on each line_note      → 0=A, 1=B …
 
-        cur_row       = None    # dict currently being accumulated
-        first_sub_of_section_1a = None   # reference to 1.A row for profit base
-        first_sub_of_section_1b = None   # reference to 1.B row for OCM base
+        cur_row = None  # dict currently being accumulated
+        first_sub_of_section_1a = None  # reference to 1.A row for profit base
+        first_sub_of_section_1b = None  # reference to 1.B row for OCM base
 
         def _section_row(number_str, name):
             return {
-                'number':     number_str,
-                'name':       name,
+                'number': number_str,
+                'name': name,
                 'is_section': True,
-                'equipment':  None,
-                'material':   None,
-                'labour':     None,
-                'total':      None,
+                'equipment': None,
+                'material': None,
+                'labour': None,
+                'total': None,
             }
 
         def _cost_row(number_str, name):
             return {
-                'number':     number_str,
-                'name':       name,
+                'number': number_str,
+                'name': name,
                 'is_section': False,
-                'equipment':  0.0,
-                'material':   0.0,
-                'labour':     0.0,
-                'total':      0.0,
+                'equipment': 0.0,
+                'material': 0.0,
+                'labour': 0.0,
+                'total': 0.0,
             }
 
         def _flush():
@@ -93,8 +92,8 @@ class SaleOrder(models.Model):
             if line.display_type == 'line_section':
                 _flush()
                 section_num += 1
-                sub_idx      = 0
-                number_str   = '{}.0'.format(section_num)
+                sub_idx = 0
+                number_str = '{}.0'.format(section_num)
                 # Start as a section header; if no notes follow it will be
                 # promoted to a cost row when the first product line arrives.
                 cur_row = _section_row(number_str, line.name or '')
@@ -108,13 +107,13 @@ class SaleOrder(models.Model):
                     rows.append(cur_row)
                     cur_row = None
 
-                letter     = chr(ord('A') + sub_idx)
-                sub_idx   += 1
+                letter = chr(ord('A') + sub_idx)
+                sub_idx += 1
                 number_str = '{}.{}'.format(section_num, letter)
-                cur_row    = _cost_row(number_str, line.name or '')
+                cur_row = _cost_row(number_str, line.name or '')
 
                 # Track 1.A and 1.B for exclusion bases
-                if section_num == 1 and sub_idx == 1:   # first sub of section 1
+                if section_num == 1 and sub_idx == 1:  # first sub of section 1
                     first_sub_of_section_1a = cur_row
                 elif section_num == 1 and sub_idx == 2:  # second sub of section 1
                     first_sub_of_section_1b = cur_row
@@ -129,50 +128,116 @@ class SaleOrder(models.Model):
                 # Promote section header row to cost row on first product
                 if cur_row['is_section']:
                     cur_row['is_section'] = False
-                    cur_row['equipment']  = 0.0
-                    cur_row['material']   = 0.0
-                    cur_row['labour']     = 0.0
-                    cur_row['total']      = 0.0
+                    cur_row['equipment'] = 0.0
+                    cur_row['material'] = 0.0
+                    cur_row['labour'] = 0.0
+                    cur_row['total'] = 0.0
 
                 cat_name = ''
                 if line.product_id and line.product_id.product_tmpl_id.boq_category_id:
                     cat_name = line.product_id.product_tmpl_id.boq_category_id.name or ''
 
-                col    = _col(cat_name)
+                col = _col(cat_name)
                 amount = line.price_subtotal
-                cur_row[col]     += amount
+                cur_row[col] += amount
                 cur_row['total'] += amount
 
         _flush()
 
         # ── Column totals ────────────────────────────────────────────────────
         total_equipment = sum(r['equipment'] for r in rows if r['equipment'] is not None)
-        total_material  = sum(r['material']  for r in rows if r['material']  is not None)
-        total_labour    = sum(r['labour']    for r in rows if r['labour']    is not None)
-        tdc             = total_equipment + total_material + total_labour
+        total_material = sum(r['material'] for r in rows if r['material'] is not None)
+        total_labour = sum(r['labour'] for r in rows if r['labour'] is not None)
+        tdc = total_equipment + total_material + total_labour
 
         # ── Exclusion bases ──────────────────────────────────────────────────
         permits_total = first_sub_of_section_1a['total'] if first_sub_of_section_1a else 0.0
-        osh_total     = first_sub_of_section_1b['total'] if first_sub_of_section_1b else 0.0
+        osh_total = first_sub_of_section_1b['total'] if first_sub_of_section_1b else 0.0
 
         profit_base = tdc - permits_total
-        ocm_base    = tdc - permits_total - osh_total
+        ocm_base = tdc - permits_total - osh_total
 
         profit = round(profit_base * PROFIT_RATE, 2)
-        ocm    = round(ocm_base    * OCM_RATE,    2)
-        vat    = round((tdc + profit + ocm) * VAT_RATE, 2)
+        ocm = round(ocm_base * OCM_RATE, 2)
+        vat = round((tdc + profit + ocm) * VAT_RATE, 2)
         total_construction = round(tdc + profit + ocm + vat, 2)
 
         return {
-            'rows':               rows,
-            'total_equipment':    total_equipment,
-            'total_material':     total_material,
-            'total_labour':       total_labour,
-            'grand_total':        tdc,
-            'profit_rate':        PROFIT_RATE * 100,
-            'ocm_rate':           OCM_RATE    * 100,
-            'profit_amount':      profit,
-            'ocm_amount':         ocm,
-            'vat_amount':         vat,
+            'rows': rows,
+            'total_equipment': total_equipment,
+            'total_material': total_material,
+            'total_labour': total_labour,
+            'grand_total': tdc,
+            'profit_rate': PROFIT_RATE * 100,
+            'ocm_rate': OCM_RATE * 100,
+            'profit_amount': profit,
+            'ocm_amount': ocm,
+            'vat_amount': vat,
             'construction_total': total_construction,
+        }
+
+    def _get_boq_architectural_details(self):
+        """Build the Architectural detailed estimate table for the report's next page."""
+        self.ensure_one()
+        lines = self.order_line.sorted('sequence')
+
+        section_found = False
+        rows = []
+        current_subtotal = 0.0
+
+        def _flush_subtotal():
+            nonlocal current_subtotal
+            if current_subtotal:
+                rows.append({
+                    'type': 'subtotal',
+                    'label': 'Sub-Total:',
+                    'amount': current_subtotal,
+                })
+                current_subtotal = 0.0
+
+        for line in lines:
+            if line.display_type == 'line_section':
+                if section_found:
+                    _flush_subtotal()
+                    break
+                section_name = (line.name or '').upper()
+                if 'ARCHITECTURAL' in section_name:
+                    section_found = True
+                    rows.append({
+                        'type': 'section',
+                        'name': line.name or 'ARCHITECTURAL',
+                    })
+                continue
+
+            if not section_found:
+                continue
+
+            if line.display_type == 'line_note':
+                _flush_subtotal()
+                rows.append({
+                    'type': 'group',
+                    'name': line.name or '',
+                })
+                continue
+
+            amount = line.price_subtotal
+            current_subtotal += amount
+            rows.append({
+                'type': 'line',
+                'description': line.name or (line.product_id.display_name if line.product_id else ''),
+                'qty': line.product_uom_qty,
+                'uom': line.product_uom.name if line.product_uom else '',
+                'unit_cost': line.price_unit,
+                'amount': amount,
+            })
+
+        if section_found:
+            _flush_subtotal()
+
+        total_amount = sum(r['amount'] for r in rows if r.get('amount') and r['type'] == 'line')
+
+        return {
+            'found': section_found,
+            'rows': rows,
+            'total_amount': total_amount,
         }
