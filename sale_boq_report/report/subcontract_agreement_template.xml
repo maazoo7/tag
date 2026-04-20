@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_subcontract_agreement_document">
+        <t t-call="web.external_layout">
+            <main>
+                <t t-set="doc" t-value="doc"/>
+                <t t-set="partner_name" t-value="doc.partner_id.name or ''"/>
+                <t t-set="project_name" t-value="doc.name or ''"/>
+                <t t-set="order_date" t-value="doc.date_order and doc.date_order.date()"/>
+
+                <div class="page" style="font-size:14px;line-height:1.55;">
+                    <div style="text-align:center;font-size:24px;font-weight:700;line-height:1.3;margin:8px 0 14px;">
+                        SUBCONTRACT AGREEMENT<br/>
+                        FOR SUPPLY OF MATERIALS AND LABOR COST<br/>
+                        (ACP INSTALLATION)
+                    </div>
+
+                    <p style="text-align:center;margin:24px 0;">KNOW ALL MEN BY THESE PRESENTS:</p>
+
+                    <p>
+                        This agreement, made and entered into
+                        <t t-if="order_date">on <t t-esc="order_date.strftime('%d %B %Y')"/></t>
+                        <t t-if="not order_date">on ____________________</t>, in Puerto Princesa City, Philippines,
+                        by and between:
+                    </p>
+
+                    <p style="text-align:center;font-weight:700;">
+                        TAGUSAO CONSTRUCTION AND TRADING INC./ENGR. LORENZO G. TAN II<br/>
+                        FIRST PARTY
+                    </p>
+
+                    <p style="text-align:center;">- and –</p>
+
+                    <p style="text-align:center;font-weight:700;">
+                        <t t-esc="partner_name"/><br/>
+                        SECOND PARTY
+                    </p>
+
+                    <p>
+                        The CONTRACTOR has been awarded a contract to supply <strong>materials, labor, tools and supervision</strong>
+                        for the project <strong>"<t t-esc="project_name"/>"</strong>.
+                    </p>
+
+                    <p>
+                        NOW THEREFORE, for and in consideration of the mutual promises and covenants contained
+                        hereinafter, the parties here agree as follows:
+                    </p>
+
+                    <p style="margin-left:24px;">
+                        a.) The <strong>SECOND PARTY&apos;s</strong> scope of works shall include but not limited to the following:
+                    </p>
+                    <t t-set="scope" t-value="doc._get_subcontract_scope()"/>
+                    <div style="margin-left:72px;">
+                        <t t-if="scope.get('sections')">
+                            <t t-foreach="scope['sections']" t-as="section">
+                                <div style="margin-top:8px;">
+                                    <t t-esc="'%s.) %s' % (section_index + 1, section.get('name') or 'GENERAL')"/>
+                                </div>
+                                <t t-if="section.get('subsections')">
+                                    <t t-foreach="section['subsections']" t-as="subsection">
+                                        <div style="margin-left:30px;">
+                                            <t t-esc="'%s. %s' % ((['I','II','III','IV','V','VI','VII','VIII','IX','X'][subsection_index] if subsection_index &lt; 10 else str(subsection_index + 1)), subsection.get('name') or 'GENERAL')"/>
+                                        </div>
+                                    </t>
+                                </t>
+                                <t t-if="not section.get('subsections')">
+                                    <div style="margin-left:30px;">I. GENERAL</div>
+                                </t>
+                            </t>
+                        </t>
+                        <t t-if="not scope.get('sections')">
+                            <div>1.) GENERAL</div>
+                            <div style="margin-left:30px;">I. No subcontracted scope lines found.</div>
+                        </t>
+                    </div>
+                </div>
+
+                <div class="page" style="font-size:14px;line-height:1.55;">
+                    <p style="margin-left:24px;">b.) Contract conditions</p>
+                    <div style="margin-left:60px;">
+                        <div>a.&#160;&#160;Materials and Installation must be in accordance to the plans provided and specifications provided as approved by the designer.</div>
+                        <div>b.&#160;&#160;Framing materials and installation must be standard to maintain the flatness and stiffness of the surface.</div>
+                        <div>c.&#160;&#160;Supplied Aluminum Composite Panels (ACP), PVDF, 4mm, must conform to approved items by the project&apos;s Designer &amp; Construction Management Team. Colors must be conformed from the approved of the designer.</div>
+                        <div>d.&#160;&#160;Materials &amp; Tools Storage, Power Supply and Scaffold will be provided by the First Party.</div>
+                        <div>e.&#160;&#160;The First Party shall not be liable for any loss or damage of materials on site caused by the other persons after the delivery to the project site.</div>
+                    </div>
+
+                    <p style="margin-left:24px;">
+                        c.) The FIRST PARTY shall pay the SECOND PARTY for full, faithful and complete performance of all
+                        of its obligations under this Agreement the sum of PESOS: <strong>EIGHT HUNDRED THOUSAND PESOS ONLY</strong>
+                        <strong>(PHP 800,000.00)</strong> exclusive of 12% Value Added Tax and 2% Withholding Tax Receipt
+                        hereinafter referred to as the "Contract Sum".
+                    </p>
+
+                    <p>
+                        In the event that there are changes in the scope of work, either by altering, adding or deducting
+                        from works covered herein, the Contract amount shall be adjusted accordingly. No claims for
+                        loss of profit or opportunity cost or addition overhead shall be made by the Sub-contractor in
+                        case of any reduction in the final Contract Amount.
+                    </p>
+
+                    <p style="margin-left:24px;">
+                        d.) The SECOND PARTY agree that the construction shall be completed within <strong>TWENTY (20)
+                        calendar days</strong> from the commencement date. This includes upon materials purchasing, delivery
+                        and installation works.
+                    </p>
+                    <div style="margin-left:70px;">
+                        <div>a.&#160;&#160;Delivery Time: 4 days from the date of DP, for the available stocks.</div>
+                        <div>b.&#160;&#160;Delivery Time for ACP Panels: maximum of 2 weeks</div>
+                        <div>c.&#160;&#160;Installation time: 24 hours working day under good weather conditions.</div>
+                    </div>
+
+                    <p>
+                        Liquidated damages per day of delay shall be paid by the Second Party for failure to substantially
+                        complete the construction within the time fixed on the Project schedule, given by the formula:
+                    </p>
+                    <p style="text-align:center;font-style:italic;">Contract Penalty = 0.1% of the contract cost for every calendar day of delay.</p>
+
+                    <p style="margin-left:24px;">
+                        e.) Contract amount shall be paid through <strong>progress billing</strong> based on actual work accomplished
+                        fabricated and installed) for that particular period less pro-rate deduction of ten (10%) percent
+                        retention and recoupment of down payment.
+                    </p>
+                    <p>
+                        Down payment shall be <strong>Five Hundred Sixty Thousand Pesos Only (Php 560,000.00)</strong> or
+                        equivalent to <strong>Seventy Percent (70%)</strong> of the Total contract Amount amounting to.
+                    </p>
+                    <p>
+                        Final Payment shall Constitute a waiver of all claims by Second Party relating to Subcontract
+                        Work, but shall in no way relieved Second Party of liability for warranties, or for nonconforming
+                        or defective work discovered after final payment.
+                    </p>
+                </div>
+
+                <div class="page" style="font-size:14px;line-height:1.55;">
+                    <p>
+                        Retention of Ten (10%) percent shall be released one (1) Months upon the completion and
+                        turnover of all the works stipulated in this contract and no defects or poor workmanship will be
+                        observed.
+                    </p>
+
+                    <p style="margin-top:20px;">
+                        f.) The Project has a warranty of ONE (1) calendar year upon acceptance for damages caused by
+                        poor mater materials and workmanship. Operational wear and tear and force majeure damages
+                        are not covered by the warranty.
+                    </p>
+
+                    <p style="margin-top:120px;">
+                        IN WITNESS WHEREOF, the parties have affixed their signature, effective on the date first written above,
+                        in the City of Puerto Princesa, Palawan, Philippines.
+                    </p>
+
+                    <p style="margin-top:60px;">TAGUSAO CONSTRUCTION &amp; TRADING INC.</p>
+
+                    <table style="width:100%;margin-top:70px;border-collapse:collapse;">
+                        <tr>
+                            <td style="width:45%;padding-right:20px;vertical-align:top;">
+                                <div style="height:60px;"></div>
+                                <div style="border-top:1px solid #000;height:1px;"></div>
+                                <div style="font-weight:700;text-align:center;margin-top:10px;">FIRST PARTY</div>
+                                <div style="margin-top:14px;">By:</div>
+                                <div style="margin-top:34px;font-weight:700;text-decoration:underline;">ENGR. LORENZO G. TAN II</div>
+                                <div>General Manager - TCATI</div>
+                            </td>
+                            <td style="width:10%;"></td>
+                            <td style="width:45%;padding-left:20px;vertical-align:top;">
+                                <div style="height:60px;"></div>
+                                <div style="border-top:1px solid #000;height:1px;"></div>
+                                <div style="font-weight:700;text-align:center;margin-top:10px;">SECOND PARTY</div>
+                                <div style="margin-top:14px;">By:</div>
+                                <div style="margin-top:34px;font-weight:700;text-decoration:underline;"><t t-esc="partner_name"/></div>
+                                <div>Subcontractor</div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div style="text-align:center;margin-top:90px;">SIGNED IN THE PRESENCE OF:</div>
+
+                    <table style="width:100%;margin-top:70px;">
+                        <tr>
+                            <td style="width:45%;border-top:1px solid #000;">&#160;</td>
+                            <td style="width:10%;"></td>
+                            <td style="width:45%;border-top:1px solid #000;">&#160;</td>
+                        </tr>
+                    </table>
+
+                    <t t-if="doc.subcontract_scope_with_lines and scope.get('sections')">
+                        <div style="margin-top:40px;">
+                            <div style="font-weight:700;margin-bottom:8px;">SECTION &gt; PRODUCT DETAILS</div>
+                            <t t-foreach="scope['sections']" t-as="section">
+                                <div style="font-weight:700;margin-top:10px;">
+                                    <t t-esc="'%s.) %s' % (section_index + 1, section.get('name') or 'GENERAL')"/>
+                                </div>
+                                <t t-foreach="section.get('subsections', [])" t-as="subsection">
+                                    <div style="margin-left:20px;font-weight:700;">
+                                        <t t-esc="'%s. %s' % ((['I','II','III','IV','V','VI','VII','VIII','IX','X'][subsection_index] if subsection_index &lt; 10 else str(subsection_index + 1)), subsection.get('name') or 'GENERAL')"/>
+                                    </div>
+                                    <table style="width:100%;margin:4px 0 8px 30px;border-collapse:collapse;font-size:12px;">
+                                        <t t-foreach="subsection.get('lines', [])" t-as="scope_line">
+                                            <tr>
+                                                <td style="padding:1px 4px;width:48%;"><t t-esc="scope_line['name']"/></td>
+                                                <td style="padding:1px 4px;width:12%;text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['qty'])"/></td>
+                                                <td style="padding:1px 4px;width:12%;text-align:center;"><t t-esc="scope_line['uom']"/></td>
+                                                <td style="padding:1px 4px;width:14%;text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['unit_price'])"/></td>
+                                                <td style="padding:1px 4px;width:14%;text-align:right;"><t t-esc="'{:,.2f}'.format(scope_line['amount'])"/></td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </main>
+        </t>
+    </template>
+
+    <template id="report_subcontract_agreement">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="sale_boq_report.report_subcontract_agreement_document"/>
+        </t>
+    </template>
+
+</odoo>
