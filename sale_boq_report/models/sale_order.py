@@ -176,68 +176,108 @@ class SaleOrder(models.Model):
             'construction_total': total_construction,
         }
 
-    def _get_boq_architectural_details(self):
-        """Build the Architectural detailed estimate table for the report's next page."""
+    def _get_boq_detailed_estimate(self):
+        """Build detailed estimate rows with section/subsection/category hierarchy."""
         self.ensure_one()
         lines = self.order_line.sorted('sequence')
+        sections = []
+        current_section = None
+        current_subsection = None
 
-        section_found = False
-        rows = []
-        current_subtotal = 0.0
+        def _as_category_list(subsection):
+            categories = subsection.pop('categories_map')
+            subsection['categories'] = list(categories.values())
+            return subsection
 
-        def _flush_subtotal():
-            nonlocal current_subtotal
-            if current_subtotal:
-                rows.append({
-                    'type': 'subtotal',
-                    'label': 'Sub-Total:',
-                    'amount': current_subtotal,
-                })
-                current_subtotal = 0.0
+        def _flush_subsection():
+            nonlocal current_subsection, current_section
+            if current_section and current_subsection:
+                current_section['subsections'].append(_as_category_list(current_subsection))
+                current_subsection = None
+
+        def _flush_section():
+            nonlocal current_section
+            _flush_subsection()
+            if current_section:
+                sections.append(current_section)
+                current_section = None
+
+        def _ensure_section():
+            nonlocal current_section
+            if not current_section:
+                current_section = {
+                    'name': 'GENERAL',
+                    'subsections': [],
+                    'notes': [],
+                    'total': 0.0,
+                }
+
+        def _ensure_subsection():
+            nonlocal current_subsection
+            _ensure_section()
+            if not current_subsection:
+                current_subsection = {
+                    'name': 'GENERAL',
+                    'categories_map': {},
+                    'subtotal': 0.0,
+                }
 
         for line in lines:
             if line.display_type == 'line_section':
-                if section_found:
-                    _flush_subtotal()
-                    break
-                section_name = (line.name or '').upper()
-                if 'ARCHITECTURAL' in section_name:
-                    section_found = True
-                    rows.append({
-                        'type': 'section',
-                        'name': line.name or 'ARCHITECTURAL',
-                    })
+                _flush_section()
+                current_section = {
+                    'name': line.name or 'SECTION',
+                    'subsections': [],
+                    'notes': [],
+                    'total': 0.0,
+                }
                 continue
 
-            if not section_found:
+            if line.display_type == 'line_subsection':
+                _flush_subsection()
+                _ensure_section()
+                current_subsection = {
+                    'name': line.name or 'SUBSECTION',
+                    'categories_map': {},
+                    'subtotal': 0.0,
+                }
                 continue
 
             if line.display_type == 'line_note':
-                _flush_subtotal()
-                rows.append({
-                    'type': 'group',
-                    'name': line.name or '',
-                })
+                _ensure_section()
+                if current_subsection:
+                    current_subsection.setdefault('notes', []).append(line.name or '')
+                else:
+                    current_section['notes'].append(line.name or '')
                 continue
 
+            _ensure_subsection()
+            category_name = 'Uncategorized'
+            if line.product_id and line.product_id.product_tmpl_id.boq_category_id:
+                category_name = line.product_id.product_tmpl_id.boq_category_id.name or 'Uncategorized'
+
+            category = current_subsection['categories_map'].setdefault(
+                category_name,
+                {'name': category_name, 'lines': [], 'total': 0.0},
+            )
+
             amount = line.price_subtotal
-            current_subtotal += amount
-            rows.append({
-                'type': 'line',
+            detail = {
                 'description': line.name or (line.product_id.display_name if line.product_id else ''),
                 'qty': line.product_uom_qty,
                 'uom': line.product_uom.name if line.product_uom else '',
                 'unit_cost': line.price_unit,
                 'amount': amount,
-            })
+            }
+            category['lines'].append(detail)
+            category['total'] += amount
+            current_subsection['subtotal'] += amount
+            current_section['total'] += amount
 
-        if section_found:
-            _flush_subtotal()
-
-        total_amount = sum(r['amount'] for r in rows if r.get('amount') and r['type'] == 'line')
+        _flush_section()
 
         return {
-            'found': section_found,
-            'rows': rows,
-            'total_amount': total_amount,
+            'sections': sections,
+            'found': bool(sections),
+            'grand_total': sum(section['total'] for section in sections),
         }
