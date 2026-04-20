@@ -5,6 +5,10 @@
 Adds a **BOQ Report** button to Sale Orders that prints a structured
 Bill of Quantities PDF matching the layout in the sample.
 
+It now includes a **Detailed Estimate** page with this structure:
+**Section (main) → Subsection → BOQ Category groups → Item lines**,
+including **Subsection Totals** and **Section Totals**.
+
 ---
 
 ## Module structure
